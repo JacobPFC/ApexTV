@@ -1,106 +1,108 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Apex TV – APEX Live Games</title>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ApexTV</title>
+    <link rel="icon" href="Apex.ico" type="image/x-icon">
+    <link rel="stylesheet" href="style.css">
 
-  <!-- Favicon -->
-  <link rel="icon" href="Apex.ico" type="image/x-icon">
-
-  <!-- CSS -->
-  <link rel="stylesheet" href="style.css">
-  <link href="https://fonts.googleapis.com/css2?family=Rubik:wght@700&display=swap" rel="stylesheet">
-
-  <!-- PapaParse for CSV -->
-  <script src="https://cdn.jsdelivr.net/npm/papaparse@5.4.1/papaparse.min.js"></script>
+    <!-- Rubik Bold -->
+    <link href="https://fonts.googleapis.com/css2?family=Rubik:wght@700&display=swap" rel="stylesheet">
 </head>
 <body>
 
-  <!-- Discord Button -->
-  <a href="https://discord.gg/5a9pxtmVCC" target="_blank" id="discord-btn">
-    <img src="https://raw.githubusercontent.com/JacobPFC/ApexTV/e7d7c55a99633e65c1d80498d3423baac23b9838/images/discord-white-icon.webp" alt="Discord" />
-  </a>
+    <!-- Background Video -->
+    <video autoplay muted loop id="bg-video">
+        <source src="background.mp4" type="video/mp4">
+    </video>
 
-  <!-- VRFS Champions Image Button -->
-  <a href="https://www.roblox.com/games/133603832850212/VRFS-Champions" target="_blank" id="vrfs-btn">
-    <img src="images/Banner2.png" alt="VRFS Champions" />
-  </a>
+    <!-- Discord Button -->
+    <a href="https://discord.gg/5a9pxtmVCC" target="_blank" id="discord-btn">
+        <img src="images/discord-white-icon.webp" alt="Discord">
+    </a>
 
-  <!-- Video Background -->
-  <video autoplay muted loop id="bg-video">
-    <source src="https://i.imgur.com/4uDFOaf.mp4" type="video/mp4">
-    Your browser does not support the video tag.
-  </video>
+    <!-- VRFS Champions Button (image) -->
+    <a href="https://www.roblox.com/games/133603832850212/VRFS-Champions" target="_blank" id="vrfs-btn">
+        <img src="images/Banner2.png" alt="VRFS Champions">
+    </a>
 
-  <header>Apex TV – APEX Live Games</header>
+    <div class="container">
+        <h1>ApexTV</h1>
 
-  <!-- Announcements -->
-  <div id="announcements"></div>
+        <div id="announcements"></div>
+        <div id="games"></div>
+    </div>
 
-  <!-- Game Cards -->
-  <div class="grid" id="gameGrid"></div>
+    <script>
+        // CSV URLs
+        const gamesURL = "https://docs.google.com/spreadsheets/d/e/2PACX-1vRkv0zHUdhN-y48FkCmTeKwq6j-ZzOnvu0QPxZP4qeapyw0OfTY4jHZFpsLHD3zDWzDAcCkZKe8AY2K/pub?output=csv";
+        const announcementsURL = "https://docs.google.com/spreadsheets/d/e/2PACX-1vTVEKnXC_xcQSK3-w-1khtOJQ4j0rbEsjdKtbqdjcJA5bs5_WTjTSTpQxkiCVg06a-c-1E0oTduvb16/pub?output=csv";
 
-  <script>
-    const announcementsCSV = "https://docs.google.com/spreadsheets/d/e/2PACX-1vTVEKnXC_xcQSK3-w-1khtOJQ4j0rbEsjdKtbqdjcJA5bs5_WTjTSTpQxkiCVg06a-c-1E0oTduvb16/pub?output=csv";
-    const gamesCSV = "https://docs.google.com/spreadsheets/d/e/2PACX-1vRkv0zHUdhN-y48FkCmTeKwq6j-ZzOnvu0QPxZP4qeapyw0OfTY4jHZFpsLHD3zDWzDAcCkZKe8AY2K/pub?output=csv";
+        // Convert CSV → array
+        function parseCSV(text) {
+            return text.split("\n").slice(1).map(row => {
+                const cols = row.split(",");
+                return {
+                    Title: cols[0],
+                    Thumbnail: cols[1],
+                    Link: cols[2],
+                    Date: cols[3]
+                };
+            });
+        }
 
-    // --- Load Announcements ---
-    Papa.parse(announcementsCSV, {
-      download: true,
-      header: true,
-      complete: function(results) {
-        const container = document.getElementById('announcements');
-        const today = new Date();
-        results.data.forEach(item => {
-          if(item.Message) {
-            const msgDate = item.Date ? new Date(item.Date) : null;
-            if(msgDate){
-              msgDate.setDate(msgDate.getDate() + 1);
-              if(msgDate < today) return;
-            }
-            const div = document.createElement('div');
-            div.className = 'announcement';
-            div.textContent = item.Message;
-            container.appendChild(div);
-          }
-        });
-      }
-    });
+        // Load games
+        fetch(gamesURL)
+            .then(r => r.text())
+            .then(data => {
+                const games = parseCSV(data);
+                const gamesDiv = document.getElementById("games");
 
-    // --- Load Games ---
-    Papa.parse(gamesCSV, {
-      download: true,
-      header: true,
-      complete: function(results) {
-        const grid = document.getElementById('gameGrid');
-        const today = new Date();
-        grid.innerHTML = '';
-        results.data.forEach(game => {
-          if(game.Title && game.Thumbnail && game.Link){
-            if(game.Date){
-              const gameDate = new Date(game.Date);
-              gameDate.setDate(gameDate.getDate()+1);
-              if(gameDate < today) return;
-            }
-            const card = document.createElement('div');
-            card.className='game-card';
-            card.onclick = ()=>window.open(game.Link,'_blank');
-            card.innerHTML=`
-              <img src="${game.Thumbnail}" class="thumb" />
-              <div class="info">
-                <div class="game-title">${game.Title}</div>
-                <div class="game-time">${game.Time || ''}</div>
-                <div class="game-date">${game.Date || ''}</div>
-                ${game.Live==='true'?'<div class="live-tag">LIVE</div>':''}
-              </div>
-            `;
-            grid.appendChild(card);
-          }
-        });
-      }
-    });
-  </script>
+                games.forEach(g => {
+                    if (!g.Title) return;
+
+                    // Only show if date is valid OR no date
+                    if (g.Date) {
+                        const gameDate = new Date(g.Date);
+                        const now = new Date();
+                        if (now > gameDate) return;
+                    }
+
+                    const tab = document.createElement("a");
+                    tab.href = g.Link;
+                    tab.className = "game-tab";
+                    tab.target = "_blank";
+
+                    tab.innerHTML = `
+                        <img src="${g.Thumbnail}" class="thumb">
+                        <div class="game-title">${g.Title}</div>
+                    `;
+
+                    gamesDiv.appendChild(tab);
+                });
+            });
+
+        // Load announcements
+        fetch(announcementsURL)
+            .then(r => r.text())
+            .then(data => {
+                const ann = parseCSV(data);
+                const box = document.getElementById("announcements");
+
+                ann.forEach(a => {
+                    if (!a.Title) return;
+
+                    const item = document.createElement("div");
+                    item.className = "announce-item";
+                    item.textContent = a.Title;
+
+                    box.appendChild(item);
+                });
+            });
+
+    </script>
+
 </body>
 </html>
 
