@@ -30,6 +30,7 @@ header {
   padding: 30px;
   position: relative;
   z-index: 2;
+  justify-items: center; /* centers cards if fewer columns */
 }
 
 /* Individual game card */
@@ -40,8 +41,10 @@ header {
   cursor: pointer;
   overflow: hidden;
   transition: 0.25s;
+  width: 100%;
+  max-width: 400px; /* limits card width */
+  box-shadow: 0 4px 10px rgba(0,0,0,0.5);
 }
-
 .game-card:hover {
   transform: scale(1.03);
   background: rgba(34,34,34,0.85);
