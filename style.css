@@ -1,16 +1,40 @@
-/* Grid layout for game cards */
+/* style.css for Apex TV – compact YouTube-style thumbnails */
+
+/* General body styles */
+body {
+  margin: 0;
+  font-family: Arial, sans-serif;
+  background: #0f0f0f;
+  color: #fff;
+  position: relative;
+  z-index: 1;
+}
+
+/* Header */
+header {
+  padding: 20px;
+  text-align: center;
+  background: rgba(26,26,26,0.8);
+  font-size: 32px;
+  font-weight: bold;
+  letter-spacing: 2px;
+  position: relative;
+  z-index: 2;
+}
+
+/* Flex container for game cards */
 .grid {
-  display: flex;              /* switch from grid to flex for strict size control */
-  flex-wrap: wrap;            /* wrap cards to new lines */
-  gap: 15px;                  /* space between cards */
+  display: flex;
+  flex-wrap: wrap;
+  gap: 15px;
   padding: 15px;
-  justify-content: flex-start; /* align left like YouTube thumbnails */
+  justify-content: flex-start;
 }
 
 /* Individual game card */
 .game-card {
-  flex: 0 0 auto;            /* prevent card from growing */
-  width: 180px;               /* fixed width for thumbnail look */
+  flex: 0 0 auto;
+  width: 180px;
   background: rgba(24,24,24,0.85);
   border-radius: 8px;
   overflow: hidden;
@@ -20,8 +44,6 @@
   transition: 0.2s;
   box-shadow: 0 3px 6px rgba(0,0,0,0.5);
 }
-
-/* Hover effect */
 .game-card:hover {
   transform: scale(1.03);
   background: rgba(34,34,34,0.85);
@@ -30,7 +52,7 @@
 /* Thumbnail image */
 .thumb {
   width: 100%;
-  height: 100px;           /* fixed height for uniform thumbnails */
+  height: 100px;
   object-fit: cover;
 }
 
