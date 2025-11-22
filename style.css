@@ -1,3 +1,5 @@
+/* Responsive Apex TV CSS – Rubik Bold, video, Discord, announcements, and game cards */
+
 body, header, .announcement, .game-title, .game-time, .game-date {
   font-family: 'Rubik', sans-serif;
   font-weight: 700;
@@ -54,7 +56,7 @@ header {
   justify-content: flex-start;
 }
 
-/* Game Card – 16:9 */
+/* Game Card – default desktop 16:9 */
 .game-card {
   position: relative;
   width: 320px;
@@ -113,6 +115,7 @@ header {
   margin-top: 2px;
 }
 
+/* Video background */
 #bg-video {
   position: fixed;
   top: 0;
@@ -154,6 +157,48 @@ body::before {
   transform: scale(1.2);
   transition: transform 0.2s;
 }
+
+/* Responsive Layout */
+@media (max-width: 1024px) {
+  .game-card {
+    width: 280px;
+    height: 157px; /* keep 16:9 ratio */
+  }
+}
+
+@media (max-width: 768px) {
+  header {
+    font-size: 28px;
+  }
+
+  .game-card {
+    width: 45%;
+    height: auto;
+    aspect-ratio: 16 / 9;
+  }
+
+  .grid {
+    justify-content: center;
+  }
+}
+
+@media (max-width: 480px) {
+  header {
+    font-size: 24px;
+  }
+
+  .game-card {
+    width: 90%;
+    height: auto;
+    aspect-ratio: 16 / 9;
+  }
+
+  #announcements .announcement {
+    font-size: 12px;
+    max-width: 95%;
+  }
+}
+
 
 
 
