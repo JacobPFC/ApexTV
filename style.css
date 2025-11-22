@@ -1,4 +1,4 @@
-/* style.css for Apex TV */
+/* style.css for Apex TV (adjusted for smaller cards) */
 
 /* General body styles */
 body {
@@ -25,18 +25,18 @@ header {
 /* Grid layout for game cards */
 .grid {
   display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
-  gap: 25px;
-  padding: 30px;
+  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); /* smaller cards */
+  gap: 20px;
+  padding: 20px;
   position: relative;
   z-index: 2;
-  justify-items: center; /* centers cards if fewer columns */
+  justify-items: center;
 }
 
 /* Individual game card */
 .game-card {
   width: 100%;
-  max-width: 400px;
+  max-width: 300px; /* smaller max width */
   background: rgba(24,24,24,0.85);
   border-radius: 12px;
   overflow: hidden;
@@ -60,20 +60,20 @@ header {
 
 /* Info below thumbnail */
 .info {
-  padding: 15px;
+  padding: 10px; /* slightly smaller padding */
 }
 
 /* Game title */
 .game-title {
-  font-size: 20px;
-  margin-bottom: 6px;
+  font-size: 18px; /* smaller font */
+  margin-bottom: 4px;
   font-weight: bold;
 }
 
 /* League tag */
 .league-tag {
   opacity: 0.7;
-  font-size: 14px;
+  font-size: 12px; /* smaller font */
 }
 
 /* Video background */
@@ -98,4 +98,3 @@ body::before {
   background: rgba(0, 0, 0, 0.5);
   z-index: 0;
 }
-
