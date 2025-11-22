@@ -41,6 +41,7 @@ header {
   overflow: hidden;
   transition: 0.25s;
 }
+
 .game-card:hover {
   transform: scale(1.03);
   background: rgba(34,34,34,0.85);
@@ -83,7 +84,7 @@ header {
   z-index: -1;
 }
 
-/* Optional dark overlay for readability */
+/* Dark overlay for readability */
 body::before {
   content: '';
   position: fixed;
