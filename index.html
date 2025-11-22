@@ -5,6 +5,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Apex TV – APEX Live Games</title>
   <link rel="stylesheet" href="style.css">
+  <link href="https://fonts.googleapis.com/css2?family=Rubik:wght@700&display=swap" rel="stylesheet">
 </head>
 <body>
 
@@ -21,7 +22,7 @@
 
   <header>Apex TV – APEX Live Games</header>
 
-  <!-- Announcements -->
+  <!-- Announcements Section -->
   <div id="announcements"></div>
 
   <!-- Game Cards -->
@@ -47,7 +48,7 @@
             const message = cells[0].textContent.trim();
             const dateStr = cells[1].textContent.trim();
             const msgDate = new Date(dateStr);
-            msgDate.setDate(msgDate.getDate() + 1); // hide one day after
+            msgDate.setDate(msgDate.getDate() + 1); // hide 1 day after
             if(msgDate < today) return;
 
             const div = document.createElement('div');
