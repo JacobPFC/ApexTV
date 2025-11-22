@@ -4,8 +4,15 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Apex TV – APEX Live Games</title>
+
+  <!-- Favicon -->
+  <link rel="icon" href="Apex.ico" type="image/x-icon">
+
+  <!-- CSS -->
   <link rel="stylesheet" href="style.css">
   <link href="https://fonts.googleapis.com/css2?family=Rubik:wght@700&display=swap" rel="stylesheet">
+
+  <!-- PapaParse for CSV -->
   <script src="https://cdn.jsdelivr.net/npm/papaparse@5.4.1/papaparse.min.js"></script>
 </head>
 <body>
@@ -72,7 +79,7 @@
               if(gameDate < today) return;
             }
             const card = document.createElement('div');
-            card.className = 'game-card';
+            card.className='game-card';
             card.onclick = ()=>window.open(game.Link,'_blank');
             card.innerHTML=`
               <img src="${game.Thumbnail}" class="thumb" />
