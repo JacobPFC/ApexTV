@@ -1,4 +1,4 @@
-/* style.css for Apex TV – thumbnails with overlay text, time, and live badge */
+/* style.css for Apex TV – larger overlay tab with centered text, time, and live badge */
 
 /* General body styles */
 body {
@@ -35,6 +35,7 @@ header {
 .game-card {
   position: relative;
   width: 180px;
+  height: 140px; /* increased height for bigger tab */
   border-radius: 8px;
   overflow: hidden;
   cursor: pointer;
@@ -49,7 +50,7 @@ header {
 /* Thumbnail image */
 .thumb {
   width: 100%;
-  height: 100px;
+  height: 100%;
   object-fit: cover;
   display: block;
 }
@@ -59,8 +60,14 @@ header {
   position: absolute;
   bottom: 0;
   width: 100%;
-  padding: 6px 8px;
+  height: 60px; /* bigger tab */
+  padding: 0 8px;
   background: linear-gradient(to top, rgba(0,0,0,0.7), rgba(0,0,0,0));
+
+  display: flex; /* vertical centering */
+  flex-direction: column;
+  justify-content: center; /* vertically center all content */
+  align-items: center; /* horizontally center text */
   text-align: center;
   color: #ffffff;
 }
