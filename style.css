@@ -1,0 +1,66 @@
+/* General body styles */
+body {
+  margin: 0;
+  font-family: Arial, sans-serif;
+  background: #0f0f0f;
+  color: #fff;
+}
+
+/* Header */
+header {
+  padding: 20px;
+  text-align: center;
+  background: #1a1a1a;
+  font-size: 32px;
+  font-weight: bold;
+  letter-spacing: 2px;
+}
+
+/* Grid layout for game cards */
+.grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+  gap: 25px;
+  padding: 30px;
+}
+
+/* Individual game card */
+.game-card {
+  background: #181818;
+  padding: 0;
+  border-radius: 12px;
+  cursor: pointer;
+  overflow: hidden;
+  transition: 0.25s;
+}
+
+.game-card:hover {
+  transform: scale(1.03);
+  background: #222;
+}
+
+/* Thumbnail image */
+.thumb {
+  width: 100%;
+  aspect-ratio: 16 / 9; /* YouTube-style thumbnail ratio */
+  object-fit: cover;
+  display: block;
+}
+
+/* Info below thumbnail */
+.info {
+  padding: 15px;
+}
+
+/* Game title */
+.game-title {
+  font-size: 20px;
+  margin-bottom: 6px;
+  font-weight: bold;
+}
+
+/* League tag */
+.league-tag {
+  opacity: 0.7;
+  font-size: 14px;
+}
