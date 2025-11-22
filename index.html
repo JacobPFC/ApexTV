@@ -21,19 +21,60 @@
 
   <header>Apex TV – APEX Live Games</header>
 
+  <!-- Announcements -->
+  <div id="announcements"></div>
+
+  <!-- Game Cards -->
   <div class="grid" id="gameGrid"></div>
 
   <script>
-    const sheetURL = "https://api.sheetbest.com/sheets/77db05aa-9464-4a83-8276-cc9a1c7933f2";
+    const gameSheetURL = "https://api.sheetbest.com/sheets/77db05aa-9464-4a83-8276-cc9a1c7933f2";
+    const announcementSheetURL = "https://docs.google.com/spreadsheets/d/e/2PACX-1vTVEKnXC_xcQSK3-w-1khtOJQ4j0rbEsjdKtbqdjcJA5bs5_WTjTSTpQxkiCVg06a-c-1E0oTduvb16/pubhtml";
 
-    fetch(sheetURL)
+    // --- Announcements ---
+    fetch(announcementSheetURL)
+      .then(res => res.text())
+      .then(html => {
+        const parser = new DOMParser();
+        const doc = parser.parseFromString(html, "text/html");
+        const rows = doc.querySelectorAll("table tbody tr");
+        const container = document.getElementById('announcements');
+        const today = new Date();
+
+        rows.forEach(row => {
+          const cells = row.querySelectorAll("td");
+          if(cells.length >= 2) {
+            const message = cells[0].textContent.trim();
+            const dateStr = cells[1].textContent.trim();
+            const msgDate = new Date(dateStr);
+            msgDate.setDate(msgDate.getDate() + 1); // hide one day after
+            if(msgDate < today) return;
+
+            const div = document.createElement('div');
+            div.className = 'announcement';
+            div.textContent = message;
+            container.appendChild(div);
+          }
+        });
+      })
+      .catch(err => console.error("Error loading announcements:", err));
+
+    // --- Game Cards ---
+    fetch(gameSheetURL)
       .then(res => res.json())
       .then(games => {
         const grid = document.getElementById('gameGrid');
+        const today = new Date();
         grid.innerHTML = '';
 
         games.forEach(game => {
           if(game.Title && game.Thumbnail && game.Link) {
+            if(game.Date) {
+              const gameDate = new Date(game.Date);
+              gameDate.setDate(gameDate.getDate() + 1); // hide 1 day after
+              if(gameDate < today) return;
+            }
+
             const card = document.createElement('div');
             card.className = 'game-card';
             card.onclick = () => window.open(game.Link, '_blank');
@@ -43,6 +84,7 @@
               <div class="info">
                 <div class="game-title">${game.Title}</div>
                 <div class="game-time">${game.Time || ''}</div>
+                <div class="game-date">${game.Date || ''}</div>
                 ${game.Live === 'true' ? '<div class="live-tag">LIVE</div>' : ''}
               </div>
             `;
