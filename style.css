@@ -56,7 +56,7 @@ header {
   justify-content: flex-start;
 }
 
-/* Game Card – 16:9 Aspect Ratio for 1280x720 */
+/* Game Card – 16:9 Aspect Ratio */
 .game-card {
   position: relative;
   width: 320px;
