@@ -1,10 +1,10 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Apex TV – APEX Live Games</title>
-  <link rel="stylesheet" href="style.css">
+  <link rel="stylesheet" href="style.css" />
 </head>
 <body>
 
@@ -28,15 +28,15 @@
         grid.innerHTML = '';
 
         games.forEach(game => {
-          if(game.title && game.thumbnail && game.link) { // skip empty rows
+          if(game.Title && game.Thumbnail && game.Link) { // use correct capitalized keys
             const card = document.createElement('div');
             card.className = 'game-card';
-            card.onclick = () => window.open(game.link, '_blank');
+            card.onclick = () => window.open(game.Link, '_blank');
 
             card.innerHTML = `
-              <img src="${game.thumbnail}" class="thumb" />
+              <img src="${game.Thumbnail}" class="thumb" />
               <div class="info">
-                <div class="game-title">${game.title}</div>
+                <div class="game-title">${game.Title}</div>
                 <div class="league-tag">League: APEX</div>
               </div>
             `;
@@ -50,3 +50,4 @@
 
 </body>
 </html>
+
