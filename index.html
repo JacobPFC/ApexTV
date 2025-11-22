@@ -37,7 +37,9 @@
               <img src="${game.Thumbnail}" class="thumb" />
               <div class="info">
                 <div class="game-title">${game.Title}</div>
+                <div class="game-time">${game.Time || ''}</div>
                 <div class="league-tag">League: APEX</div>
+                ${game.Live === 'true' ? '<div class="live-tag">LIVE</div>' : ''}
               </div>
             `;
 
@@ -50,3 +52,4 @@
 
 </body>
 </html>
+
