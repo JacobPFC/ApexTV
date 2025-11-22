@@ -30,32 +30,26 @@
 
   <script>
     const gameSheetURL = "https://api.sheetbest.com/sheets/77db05aa-9464-4a83-8276-cc9a1c7933f2";
-    const announcementSheetURL = "https://docs.google.com/spreadsheets/d/e/2PACX-1vTVEKnXC_xcQSK3-w-1khtOJQ4j0rbEsjdKtbqdjcJA5bs5_WTjTSTpQxkiCVg06a-c-1E0oTduvb16/pubhtml";
+    const announcementSheetURL = "https://api.sheetbest.com/sheets/65594f5a-5f62-41a5-8c5b-95b995bcf32b";
 
     // --- Announcements ---
     fetch(announcementSheetURL)
-      .then(res => res.text())
-      .then(html => {
-        const parser = new DOMParser();
-        const doc = parser.parseFromString(html, "text/html");
-        const rows = doc.querySelectorAll("table tr"); // grab all rows
+      .then(res => res.json())
+      .then(data => {
         const container = document.getElementById('announcements');
         const today = new Date();
 
-        rows.forEach(row => {
-          const cells = row.querySelectorAll("td");
-          if(cells.length >= 2) {
-            const message = cells[0].innerText.trim();
-            const dateStr = cells[1].innerText.trim();
-            if(!message || !dateStr) return;
-
-            const msgDate = new Date(dateStr);
-            msgDate.setDate(msgDate.getDate() + 1); // hide 1 day after
-            if(msgDate < today) return;
+        data.forEach(item => {
+          if(item.Message) {
+            const msgDate = item.Date ? new Date(item.Date) : null;
+            if(msgDate) {
+              msgDate.setDate(msgDate.getDate() + 1); // hide one day after
+              if(msgDate < today) return;
+            }
 
             const div = document.createElement('div');
             div.className = 'announcement';
-            div.textContent = message;
+            div.textContent = item.Message;
             container.appendChild(div);
           }
         });
