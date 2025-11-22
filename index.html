@@ -1,11 +1,10 @@
-<!-- index.html -->
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Apex TV – APEX Live Game</title>
-  <link rel="stylesheet" href="style.css">
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Apex TV – APEX Live Games</title>
+  <link rel="stylesheet" href="style.css" />
 </head>
 <body>
 
@@ -15,17 +14,36 @@
     Your browser does not support the video tag.
   </video>
 
-  <header>Apex TV – APEX Live Game</header>
+  <header>Apex TV – APEX Live Games</header>
 
-  <div class="grid">
-    <div class="game-card" onclick="window.location='https://twitch.tv/example1'">
-      <img src="https://i.imgur.com/aWdvdQf.png" class="thumb">
-      <div class="info">
-        <div class="game-title">Portsmouth V Hearts</div>
-        <div class="league-tag">League: APEX</div>
-      </div>
-    </div>
-  </div>
+  <div class="grid" id="gameGrid"></div>
+
+  <script>
+    const sheetURL = "https://api.sheetbest.com/sheets/77db05aa-9464-4a83-8276-cc9a1c7933f2";
+
+    fetch(sheetURL)
+      .then(res => res.json())
+      .then(games => {
+        const grid = document.getElementById('gameGrid');
+        games.forEach(game => {
+          const card = document.createElement('div');
+          card.className = 'game-card';
+          card.onclick = () => window.open(game.link, '_blank');
+
+          card.innerHTML = `
+            <img src="${game.thumbnail}" class="thumb">
+            <div class="info">
+              <div class="game-title">${game.title}</div>
+              <div class="league-tag">League: APEX</div>
+            </div>
+          `;
+
+          grid.appendChild(card);
+        });
+      })
+      .catch(err => console.error('Error loading games:', err));
+  </script>
 
 </body>
 </html>
+
