@@ -1,10 +1,10 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Apex TV – APEX Live Games</title>
-  <link rel="stylesheet" href="style.css" />
+  <link rel="stylesheet" href="style.css">
 </head>
 <body>
 
@@ -25,20 +25,24 @@
       .then(res => res.json())
       .then(games => {
         const grid = document.getElementById('gameGrid');
+        grid.innerHTML = '';
+
         games.forEach(game => {
-          const card = document.createElement('div');
-          card.className = 'game-card';
-          card.onclick = () => window.open(game.link, '_blank');
+          if(game.title && game.thumbnail && game.link) { // skip empty rows
+            const card = document.createElement('div');
+            card.className = 'game-card';
+            card.onclick = () => window.open(game.link, '_blank');
 
-          card.innerHTML = `
-            <img src="${game.thumbnail}" class="thumb">
-            <div class="info">
-              <div class="game-title">${game.title}</div>
-              <div class="league-tag">League: APEX</div>
-            </div>
-          `;
+            card.innerHTML = `
+              <img src="${game.thumbnail}" class="thumb" />
+              <div class="info">
+                <div class="game-title">${game.title}</div>
+                <div class="league-tag">League: APEX</div>
+              </div>
+            `;
 
-          grid.appendChild(card);
+            grid.appendChild(card);
+          }
         });
       })
       .catch(err => console.error('Error loading games:', err));
@@ -46,4 +50,3 @@
 
 </body>
 </html>
-

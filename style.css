@@ -35,14 +35,15 @@ header {
 
 /* Individual game card */
 .game-card {
-  background: rgba(24,24,24,0.85);
-  padding: 0;
-  border-radius: 12px;
-  cursor: pointer;
-  overflow: hidden;
-  transition: 0.25s;
   width: 100%;
-  max-width: 400px; /* limits card width */
+  max-width: 400px;
+  background: rgba(24,24,24,0.85);
+  border-radius: 12px;
+  overflow: hidden;
+  cursor: pointer;
+  display: flex;
+  flex-direction: column;
+  transition: 0.25s;
   box-shadow: 0 4px 10px rgba(0,0,0,0.5);
 }
 .game-card:hover {
@@ -53,9 +54,8 @@ header {
 /* Thumbnail image */
 .thumb {
   width: 100%;
-  aspect-ratio: 16 / 9;
+  height: auto;
   object-fit: cover;
-  display: block;
 }
 
 /* Info below thumbnail */
@@ -98,3 +98,4 @@ body::before {
   background: rgba(0, 0, 0, 0.5);
   z-index: 0;
 }
+
