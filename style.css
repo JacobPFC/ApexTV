@@ -1,4 +1,4 @@
-/* style.css for Apex TV – larger overlay tab with centered text, time, and live badge */
+/* style.css for Apex TV – larger overlay tab with centered text, time, and live badge, small Discord button */
 
 /* General body styles */
 body {
@@ -119,13 +119,13 @@ body::before {
   z-index: 0;
 }
 
-/* Discord Button in top-right corner */
+/* Small Discord Button in top-right corner */
 #discord-btn {
   position: fixed;
-  top: 20px;
-  right: 20px;
-  width: 40px;
-  height: 40px;
+  top: 15px;
+  right: 15px;
+  width: 30px;  /* smaller size */
+  height: 30px; /* smaller size */
   z-index: 10;
   display: flex;
   justify-content: center;
