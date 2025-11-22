@@ -38,15 +38,17 @@
       .then(html => {
         const parser = new DOMParser();
         const doc = parser.parseFromString(html, "text/html");
-        const rows = doc.querySelectorAll("table tbody tr");
+        const rows = doc.querySelectorAll("table tr"); // grab all rows
         const container = document.getElementById('announcements');
         const today = new Date();
 
         rows.forEach(row => {
           const cells = row.querySelectorAll("td");
           if(cells.length >= 2) {
-            const message = cells[0].textContent.trim();
-            const dateStr = cells[1].textContent.trim();
+            const message = cells[0].innerText.trim();
+            const dateStr = cells[1].innerText.trim();
+            if(!message || !dateStr) return;
+
             const msgDate = new Date(dateStr);
             msgDate.setDate(msgDate.getDate() + 1); // hide 1 day after
             if(msgDate < today) return;
