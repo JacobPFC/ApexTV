@@ -1,109 +1,186 @@
 <!DOCTYPE html>
-<html lang="en">
+<html>
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>ApexTV</title>
-    <link rel="icon" href="Apex.ico" type="image/x-icon">
-    <link rel="stylesheet" href="style.css">
+<meta charset="UTF-8">
 
-    <!-- Rubik Bold -->
-    <link href="https://fonts.googleapis.com/css2?family=Rubik:wght@700&display=swap" rel="stylesheet">
+<title>Sportwave</title>
+
+<style>
+    body {
+        background: #0b0b0b;
+        color: white;
+        font-family: Arial, sans-serif;
+        margin: 0;
+        padding: 0;
+    }
+
+    h1 {
+        text-align: center;
+        margin-top: 20px;
+        font-weight: 700;
+    }
+
+    #games {
+        display: flex;
+        flex-wrap: wrap;
+        justify-content: center;
+        padding: 20px;
+        gap: 20px;
+    }
+
+    .game-tab {
+        width: 160px;
+        background: #181818;
+        border-radius: 10px;
+        text-decoration: none;
+        color: white;
+        padding: 10px;
+        text-align: center;
+        transition: 0.2s;
+        border: 1px solid #292929;
+    }
+
+    .game-tab:hover {
+        transform: scale(1.05);
+        background: #222;
+    }
+
+    .thumb {
+        width: 140px;
+        height: 80px;
+        object-fit: cover;
+        border-radius: 6px;
+        margin-bottom: 10px;
+    }
+
+    .game-title {
+        font-size: 14px;
+        font-weight: 600;
+    }
+
+    #announcements {
+        width: 90%;
+        max-width: 600px;
+        margin: 20px auto;
+        background: #141414;
+        padding: 20px;
+        border-radius: 10px;
+        border: 1px solid #242424;
+    }
+
+    .announce-item {
+        padding: 8px 0;
+        border-bottom: 1px solid #2a2a2a;
+        font-size: 14px;
+    }
+
+    .announce-item:last-child {
+        border-bottom: none;
+    }
+</style>
 </head>
+
 <body>
 
-    <!-- Background Video -->
-    <video autoplay muted loop id="bg-video">
-        <source src="background.mp4" type="video/mp4">
-    </video>
+<h1>Sportwave</h1>
 
-    <!-- Discord Button -->
-    <a href="https://discord.gg/5a9pxtmVCC" target="_blank" id="discord-btn">
-        <img src="images/discord-white-icon.webp" alt="Discord">
-    </a>
+<div id="announcements"></div>
 
-    <!-- VRFS Champions Button (image) -->
-    <a href="https://www.roblox.com/games/133603832850212/VRFS-Champions" target="_blank" id="vrfs-btn">
-        <img src="images/Banner2.png" alt="VRFS Champions">
-    </a>
+<div id="games"></div>
 
-    <div class="container">
-        <h1>ApexTV</h1>
+<script>
+    const gamesURL = "https://docs.google.com/spreadsheets/d/e/2PACX-1vRkv0zHUdhN-y48FkCmTeKwq6j-ZzOnvu0QPxZP4qeapyw0OfTY4jHZFpsLHD3zDWzDAcCkZKe8AY2K/pub?output=csv";
+    const announcementsURL = "https://docs.google.com/spreadsheets/d/e/2PACX-1vTVEKnXC_xcQSK3-w-1khtOJQ4j0rbEsjdKtbqdjcJA5bs5_WTjTSTpQxkiCVg06a-c-1E0oTduvb16/pub?output=csv";
 
-        <div id="announcements"></div>
-        <div id="games"></div>
-    </div>
+    // Proper CSV parser that handles commas + quotes
+    function parseCSV(text) {
+        const rows = [];
+        let current = "";
+        let insideQuotes = false;
+        let row = [];
 
-    <script>
-        // CSV URLs
-        const gamesURL = "https://docs.google.com/spreadsheets/d/e/2PACX-1vRkv0zHUdhN-y48FkCmTeKwq6j-ZzOnvu0QPxZP4qeapyw0OfTY4jHZFpsLHD3zDWzDAcCkZKe8AY2K/pub?output=csv";
-        const announcementsURL = "https://docs.google.com/spreadsheets/d/e/2PACX-1vTVEKnXC_xcQSK3-w-1khtOJQ4j0rbEsjdKtbqdjcJA5bs5_WTjTSTpQxkiCVg06a-c-1E0oTduvb16/pub?output=csv";
+        for (let i = 0; i < text.length; i++) {
+            const char = text[i];
+            const next = text[i + 1];
 
-        // Convert CSV → array
-        function parseCSV(text) {
-            return text.split("\n").slice(1).map(row => {
-                const cols = row.split(",");
-                return {
-                    Title: cols[0],
-                    Thumbnail: cols[1],
-                    Link: cols[2],
-                    Date: cols[3]
-                };
-            });
+            if (char === '"' && insideQuotes && next === '"') {
+                current += '"';
+                i++;
+            } else if (char === '"') {
+                insideQuotes = !insideQuotes;
+            } else if (char === ',' && !insideQuotes) {
+                row.push(current.trim());
+                current = "";
+            } else if ((char === '\n' || char === '\r') && !insideQuotes) {
+                if (current.length > 0 || row.length > 0) {
+                    row.push(current.trim());
+                    rows.push(row);
+                    row = [];
+                    current = "";
+                }
+            } else {
+                current += char;
+            }
         }
 
-        // Load games
-        fetch(gamesURL)
-            .then(r => r.text())
-            .then(data => {
-                const games = parseCSV(data);
-                const gamesDiv = document.getElementById("games");
+        if (current.trim() || row.length) {
+            row.push(current.trim());
+            rows.push(row);
+        }
 
-                games.forEach(g => {
-                    if (!g.Title) return;
+        const headers = rows[0];
+        return rows.slice(1).map(r => {
+            const obj = {};
+            headers.forEach((h, i) => obj[h] = r[i] || "");
+            return obj;
+        });
+    }
 
-                    // Only show if date is valid OR no date
-                    if (g.Date) {
-                        const gameDate = new Date(g.Date);
-                        const now = new Date();
-                        if (now > gameDate) return;
-                    }
+    // Load games
+    fetch(gamesURL)
+        .then(r => r.text())
+        .then(data => {
+            const games = parseCSV(data);
+            const gamesDiv = document.getElementById("games");
 
-                    const tab = document.createElement("a");
-                    tab.href = g.Link;
-                    tab.className = "game-tab";
-                    tab.target = "_blank";
+            games.forEach(g => {
+                if (!g.Title) return;
 
-                    tab.innerHTML = `
-                        <img src="${g.Thumbnail}" class="thumb">
-                        <div class="game-title">${g.Title}</div>
-                    `;
+                const tab = document.createElement("a");
+                tab.href = g.Link;
+                tab.className = "game-tab";
+                tab.target = "_blank";
 
-                    gamesDiv.appendChild(tab);
-                });
+                tab.innerHTML = `
+                    <img src="${g.Thumbnail}" class="thumb">
+                    <div class="game-title">${g.Title}</div>
+                `;
+
+                gamesDiv.appendChild(tab);
             });
+        });
 
-        // Load announcements
-        fetch(announcementsURL)
-            .then(r => r.text())
-            .then(data => {
-                const ann = parseCSV(data);
-                const box = document.getElementById("announcements");
+    // Load announcements
+    fetch(announcementsURL)
+        .then(r => r.text())
+        .then(data => {
+            const ann = parseCSV(data);
+            const box = document.getElementById("announcements");
 
-                ann.forEach(a => {
-                    if (!a.Title) return;
+            ann.forEach(a => {
+                if (!a.Title) return;
 
-                    const item = document.createElement("div");
-                    item.className = "announce-item";
-                    item.textContent = a.Title;
+                const item = document.createElement("div");
+                item.className = "announce-item";
+                item.textContent = a.Title;
 
-                    box.appendChild(item);
-                });
+                box.appendChild(item);
             });
-
-    </script>
+        });
+</script>
 
 </body>
 </html>
+
 
 
