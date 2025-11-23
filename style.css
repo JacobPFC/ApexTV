@@ -1,91 +1,130 @@
-body {
-    margin: 0;
-    font-family: 'Rubik', sans-serif;
-    color: white;
-    text-align: center;
-}
+/* Apex TV — Bold Rubik, thumbnails 16:9, announcements, buttons */
 
-/* Background video fill */
+/* Use Rubik Bold everywhere */
+:root { --accent: #1e90ff; --bg: #0b0b0b; --panel: rgba(255,255,255,0.04); }
+
+* { box-sizing: border-box; }
+html,body { height: 100%; margin: 0; font-family: 'Rubik', sans-serif; font-weight:700; background:var(--bg); color:#fff; }
+
+/* Video background */
 #bg-video {
-    position: fixed;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
-    object-fit: cover;
-    z-index: -1;
+  position: fixed;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  z-index: -2;
+}
+body::before {
+  content: '';
+  position: fixed; inset:0;
+  background: rgba(0,0,0,0.45);
+  z-index: -1;
 }
 
-/* Main layout */
-.container {
-    margin-top: 120px;
-}
-
-/* Game Tabs */
-.game-tab {
-    display: inline-block;
-    width: 330px;
-    margin: 15px;
-    text-decoration: none;
-    color: white;
-    text-align: center;
-}
-
-.thumb {
-    width: 330px;
-    height: 185px;
-    object-fit: cover;
-    border-radius: 10px;
-}
-
-.game-title {
-    font-size: 20px;
-    margin-top: 8px;
-    font-weight: 700;
+/* Header */
+#page-header {
+  text-align: center;
+  padding: 18px 12px;
+  font-size: 28px;
+  letter-spacing: 1px;
+  background: rgba(12,12,12,0.35);
+  position: relative;
+  z-index: 2;
 }
 
 /* Announcements */
-#announcements {
-    margin-bottom: 25px;
-    font-size: 22px;
+.announcements { display:flex; flex-direction:column; gap:8px; align-items:center; padding:12px; margin:14px auto; max-width:980px; z-index:2; }
+.announcement {
+  background: var(--panel);
+  padding:10px 14px;
+  border-radius:8px;
+  min-width:220px;
+  max-width:90%;
+  box-shadow: 0 3px 8px rgba(0,0,0,0.4);
 }
 
-.announce-item {
-    margin-bottom: 10px;
-    font-weight: 700;
+/* Grid */
+main { padding: 14px; display:flex; justify-content:center; }
+.grid {
+  display:flex;
+  flex-wrap:wrap;
+  gap:16px;
+  max-width:1200px;
+  width:100%;
+  justify-content:flex-start;
 }
 
-/* Discord button */
-#discord-btn {
-    position: fixed;
-    top: 10px;
-    right: 10px;
-    z-index: 999;
+/* Card: 16:9 aspect ratio (for 1280x720 thumbnails scaled) */
+.game-card {
+  width: 320px;                /* desktop size (scales with media queries below) */
+  border-radius:10px;
+  overflow: hidden;
+  background: rgba(255,255,255,0.02);
+  cursor: pointer;
+  box-shadow: 0 6px 18px rgba(0,0,0,0.5);
+  transition: transform .14s ease;
+  position: relative;
+  z-index: 2;
+}
+.game-card:hover { transform: translateY(-4px) scale(1.02); }
+
+/* Thumb container keeps overlay badges */
+.thumb-wrap { position: relative; width:100%; height:0; padding-bottom:56.25%; /* 16:9 */ overflow:hidden; background:#111; }
+.thumb-wrap img.thumb { position:absolute; inset:0; width:100%; height:100%; object-fit:cover; display:block; }
+
+/* LIVE badge */
+.live-badge {
+  position:absolute;
+  top:8px;
+  left:8px;
+  background:#e33;
+  color:#fff;
+  font-size:12px;
+  padding:4px 6px;
+  border-radius:6px;
+  z-index:4;
+  box-shadow:0 2px 6px rgba(0,0,0,0.5);
 }
 
-#discord-btn img {
-    width: 33px;
-    height: auto;
-}
+/* Info area */
+.info { padding:10px 12px; display:flex; flex-direction:column; gap:6px; align-items:center; text-align:center; }
+.game-title { font-size:16px; line-height:1.1; }
+.meta { display:flex; gap:8px; font-size:12px; color:#ddd; }
 
-/* VRFS Champions Image Button */
-#vrfs-btn {
-    position: fixed;
-    top: 10px;
-    right: 55px;
-    z-index: 999;
-    display: inline-block;
+/* Top-right small buttons (Discord + VRFS) */
+#discord-btn, #vrfs-btn {
+  position: fixed;
+  top: 10px;
+  z-index: 9999;
+  display:inline-block;
+  text-decoration:none;
+  outline: none;
+  pointer-events:auto;
 }
+#discord-btn { right: 10px; }
+#discord-btn img { width:28px; height:auto; display:block; }
 
-#vrfs-btn img {
-    width: 50px;   /* smaller */
-    height: auto;
-    border-radius: 4px;
-    transition: 0.2s;
+#vrfs-btn { right: 52px; }
+#vrfs-btn img { width:46px; height:auto; display:block; border-radius:6px; box-shadow: 0 3px 8px rgba(0,0,0,0.5); transition: transform .12s; }
+#vrfs-btn img:hover { transform: scale(1.06); }
+
+/* Responsive tweaks so desktop layout stays same, small screens adapt */
+@media (max-width: 1024px) {
+  .game-card { width: 300px; }
+  #vrfs-btn img { width:42px; }
 }
-
-#vrfs-btn img:hover {
-    transform: scale(1.08);
+@media (max-width: 768px) {
+  #page-header { font-size:22px; }
+  .game-card { width: 46%; }
+  .grid { justify-content:center; }
+  #vrfs-btn img { width:36px; }
+}
+@media (max-width: 480px) {
+  .game-card { width: 92%; }
+  #discord-btn img { width:24px; }
+  #vrfs-btn img { width:32px; right: 48px; }
+  .announcement { font-size:13px; padding:8px; }
 }
 
 
