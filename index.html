@@ -12,7 +12,7 @@
   <link rel="stylesheet" href="style.css">
   <link href="https://fonts.googleapis.com/css2?family=Rubik:wght@700&display=swap" rel="stylesheet">
 
-  <!-- PapaParse for CSV -->
+  <!-- PapaParse -->
   <script src="https://cdn.jsdelivr.net/npm/papaparse@5.4.1/papaparse.min.js"></script>
 </head>
 <body>
@@ -22,15 +22,14 @@
     <img src="https://raw.githubusercontent.com/JacobPFC/ApexTV/e7d7c55a99633e65c1d80498d3423baac23b9838/images/discord-white-icon.webp" alt="Discord" />
   </a>
 
-  <!-- VRFS Champions Image Button -->
+  <!-- VRFS Champions Button -->
   <a href="https://www.roblox.com/games/133603832850212/VRFS-Champions" target="_blank" id="vrfs-btn">
     <img src="images/Banner2.png" alt="VRFS Champions" />
   </a>
 
-  <!-- Video Background -->
+  <!-- Background Video -->
   <video autoplay muted loop id="bg-video">
     <source src="https://i.imgur.com/4uDFOaf.mp4" type="video/mp4">
-    Your browser does not support the video tag.
   </video>
 
   <header>Apex TV – APEX Live Games</header>
@@ -38,8 +37,22 @@
   <!-- Announcements -->
   <div id="announcements"></div>
 
-  <!-- Game Tabs -->
+  <!-- Game Grid -->
   <div class="grid" id="gameGrid"></div>
+
+  <!-- No Games Message -->
+  <div id="noGamesMessage" style="
+    display:none;
+    text-align:center;
+    margin-top:40px;
+    font-size:22px;
+    color:white;
+    font-family:'Rubik', sans-serif;
+    font-weight:700;
+    text-shadow:0 0 6px black;
+  ">
+    No upcoming games detected.
+  </div>
 
   <script>
     const announcementsCSV = "https://docs.google.com/spreadsheets/d/e/2PACX-1vTVEKnXC_xcQSK3-w-1khtOJQ4j0rbEsjdKtbqdjcJA5bs5_WTjTSTpQxkiCVg06a-c-1E0oTduvb16/pub?output=csv";
@@ -68,14 +81,18 @@
       }
     });
 
-    // Load Game Tabs
+    // Load Games
     Papa.parse(gamesCSV, {
       download: true,
       header: true,
       complete: function(results) {
         const grid = document.getElementById('gameGrid');
+        const noGamesMessage = document.getElementById('noGamesMessage');
         const today = new Date();
+
         grid.innerHTML = '';
+        let gameCount = 0;
+
         results.data.forEach(game => {
           if(game.Title && game.Thumbnail && game.Link){
             if(game.Date){
@@ -83,24 +100,35 @@
               gameDate.setDate(gameDate.getDate()+1);
               if(gameDate < today) return;
             }
+
+            gameCount++;
+
             const card = document.createElement('div');
             card.className='game-card';
             card.onclick = ()=>window.open(game.Link,'_blank');
+
             card.innerHTML=`
               <img src="${game.Thumbnail}" class="thumb" />
               <div class="info">
                 <div class="game-title">${game.Title}</div>
                 <div class="game-time">${game.Time || ''}</div>
                 <div class="game-date">${game.Date || ''}</div>
-                ${game.Live==='true'?'<div class="live-tag">LIVE</div>':''}
+                ${game.Live==='true' ? '<div class="live-tag">LIVE</div>' : ''}
               </div>
             `;
+
             grid.appendChild(card);
           }
         });
+
+        // If no games exist, show message
+        if(gameCount === 0){
+          noGamesMessage.style.display = "block";
+        }
       }
     });
   </script>
+
 </body>
 </html>
 
