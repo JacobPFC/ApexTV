@@ -1,193 +1,84 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="utf-8" />
-  <meta name="viewport" content="width=device-width,initial-scale=1" />
-  <title>Apex TV – APEX Live Games</title>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>ApexTV</title>
 
-  <!-- Favicon (place Apex.ico next to index.html) -->
-  <link rel="icon" href="Apex.ico" type="image/x-icon">
+    <!-- Favicon -->
+    <link rel="icon" type="image/x-icon" href="Apex.ico" />
 
-  <!-- CSS -->
-  <link rel="stylesheet" href="style.css">
+    <!-- Google Font: Rubik Bold -->
+    <link href="https://fonts.googleapis.com/css2?family=Rubik:wght@700&display=swap" rel="stylesheet">
 
-  <!-- Rubik Bold -->
-  <link href="https://fonts.googleapis.com/css2?family=Rubik:wght@700&display=swap" rel="stylesheet">
+    <!-- CSS -->
+    <link rel="stylesheet" href="style.css" />
 </head>
 <body>
-  <!-- Small Discord icon -->
-  <a id="discord-btn" href="https://discord.gg/5a9pxtmVCC" target="_blank" rel="noopener">
-    <img src="https://raw.githubusercontent.com/JacobPFC/ApexTV/main/images/discord-white-icon.webp" alt="Discord">
-  </a>
 
-  <!-- VRFS Champions image button (in images/Banner2.png) -->
-  <a id="vrfs-btn" href="https://www.roblox.com/games/133603832850212/VRFS-Champions" target="_blank" rel="noopener">
-    <img src="https://raw.githubusercontent.com/JacobPFC/ApexTV/main/images/Banner2.png" alt="VRFS Champions">
-  </a>
+    <!-- Background Video -->
+    <video autoplay muted loop id="bgvid">
+        <source src="images/background.mp4" type="video/mp4">
+    </video>
 
-  <!-- Video background -->
-  <video autoplay muted loop id="bg-video" playsinline>
-    <source src="https://i.imgur.com/4uDFOaf.mp4" type="video/mp4">
-  </video>
+    <!-- Discord Button -->
+    <a href="https://discord.gg/5a9pxtmVCC" target="_blank" id="discord-btn">
+        <img src="images/discord-white-icon.webp" alt="Discord">
+    </a>
 
-  <header id="page-header">Apex TV – APEX Live Games</header>
+    <!-- VRFS Button -->
+    <a href="https://www.roblox.com/games/133603832850212/VRFS-Champions" target="_blank" id="vrfs-btn">
+        <img src="images/Banner2.png" alt="VRFS Champions">
+    </a>
 
-  <!-- Announcements -->
-  <div id="announcements" class="announcements"></div>
+    <h1 class="title">ApexTV</h1>
 
-  <!-- Game grid -->
-  <main>
-    <div id="gameGrid" class="grid"></div>
-  </main>
+    <div id="announcements"></div>
+    <div id="games"></div>
 
-  <!-- Robust CSV parser + data loading -->
-  <script>
-  // CSV URLs (published as CSV)
-  const announcementsCSV = "https://docs.google.com/spreadsheets/d/e/2PACX-1vTVEKnXC_xcQSK3-w-1khtOJQ4j0rbEsjdKtbqdjcJA5bs5_WTjTSTpQxkiCVg06a-c-1E0oTduvb16/pub?output=csv";
-  const gamesCSV         = "https://docs.google.com/spreadsheets/d/e/2PACX-1vRkv0zHUdhN-y48FkCmTeKwq6j-ZzOnvu0QPxZP4qeapyw0OfTY4jHZFpsLHD3zDWzDAcCkZKe8AY2K/pub?output=csv";
+    <!-- PapaParse -->
+    <script src="https://cdn.jsdelivr.net/npm/papaparse@5.4.1/papaparse.min.js"></script>
 
-  // Robust CSV parser that handles commas, quotes, and newlines in fields
-  function parseCSV(text) {
-    const rows = [];
-    let cur = '';
-    let row = [];
-    let inQuotes = false;
+    <script>
+        const gamesCSV = "https://docs.google.com/spreadsheets/d/e/2PACX-1vRkv0zHUdhN-y48FkCmTeKwq6j-ZzOnvu0QPxZP4qeapyw0OfTY4jHZFpsLHD3zDWzDAcCkZKe8AY2K/pub?output=csv";
+        const announcementsCSV = "https://docs.google.com/spreadsheets/d/e/2PACX-1vTVEKnXC_xcQSK3-w-1khtOJQ4j0rbEsjdKtbqdjcJA5bs5_WTjTSTpQxkiCVg06a-c-1E0oTduvb16/pub?output=csv";
 
-    for (let i = 0; i < text.length; i++) {
-      const ch = text[i];
-      const nxt = text[i+1];
-
-      if (ch === '"' && inQuotes && nxt === '"') {
-        // escaped quote
-        cur += '"';
-        i++;
-      } else if (ch === '"') {
-        inQuotes = !inQuotes;
-      } else if (ch === ',' && !inQuotes) {
-        row.push(cur);
-        cur = '';
-      } else if ((ch === '\n' || ch === '\r') && !inQuotes) {
-        // handle \r\n by skipping empty following
-        if (ch === '\r' && text[i+1] === '\n') continue;
-        row.push(cur);
-        rows.push(row);
-        row = [];
-        cur = '';
-      } else {
-        cur += ch;
-      }
-    }
-    // tail
-    if (cur !== '' || row.length) { row.push(cur); rows.push(row); }
-
-    if (!rows.length) return [];
-
-    const headers = rows[0].map(h => h.trim());
-    const data = rows.slice(1).map(r => {
-      const obj = {};
-      headers.forEach((h, i) => obj[h] = (r[i] !== undefined ? r[i].trim() : ""));
-      return obj;
-    });
-    return data;
-  }
-
-  // Utility to parse ISO-like dates robustly and compare day-only
-  function parseDateSafe(s) {
-    if (!s) return null;
-    // support YYYY-MM-DD or other common formats
-    const d = new Date(s);
-    if (isNaN(d)) {
-      // try replacing - with / for Safari
-      const d2 = new Date(s.replace(/-/g,'/'));
-      return isNaN(d2) ? null : d2;
-    }
-    return d;
-  }
-
-  // Render announcements
-  fetch(announcementsCSV).then(r => r.text()).then(txt => {
-    try {
-      const data = parseCSV(txt);
-      const container = document.getElementById('announcements');
-      container.innerHTML = ''; // clear
-      const today = new Date();
-      data.forEach(item => {
-        const message = item.Message || item.Title || item.message || "";
-        const dateStr = item.Date || item.date || "";
-        if (!message) return;
-
-        if (dateStr) {
-          const d = parseDateSafe(dateStr);
-          if (d) {
-            // hide 1 day after
-            d.setDate(d.getDate() + 1);
-            if (d < today) return;
-          }
+        function loadCSV(url, callback) {
+            Papa.parse(url, {
+                download: true,
+                header: true,
+                complete: (result) => callback(result.data)
+            });
         }
 
-        const el = document.createElement('div');
-        el.className = 'announcement';
-        el.textContent = message;
-        container.appendChild(el);
-      });
-    } catch (e) {
-      console.error("Announcements parse error:", e);
-    }
-  }).catch(e => console.error("Announcements fetch error:", e));
+        loadCSV(gamesCSV, (games) => {
+            const box = document.getElementById("games");
+            games.forEach(g => {
+                if (!g.Title) return;
 
-  // Render games
-  fetch(gamesCSV).then(r => r.text()).then(txt => {
-    try {
-      const data = parseCSV(txt);
-      const grid = document.getElementById('gameGrid');
-      grid.innerHTML = '';
-      const today = new Date();
+                box.innerHTML += `
+                    <a class="game-tab" href="${g.Link}" target="_blank">
+                        <img class="thumb" src="${g.Thumbnail}">
+                        <div class="game-title">${g.Title}</div>
+                    </a>
+                `;
+            });
+        });
 
-      data.forEach(game => {
-        const title = game.Title || game.title || "";
-        const thumb = game.Thumbnail || game.thumbnail || game.Thumb || game.IMAGE || "";
-        const link  = game.Link || game.link || game.URL || "";
-        const time  = game.Time || game.time || "";
-        const date  = game.Date || game.date || "";
-        const live  = (game.Live || game.live || "").toLowerCase();
+        loadCSV(announcementsCSV, (ann) => {
+            const box = document.getElementById("announcements");
+            ann.forEach(a => {
+                if (!a.Title) return;
 
-        if (!title || !thumb || !link) return;
+                box.innerHTML += `
+                    <div class="announce">
+                        ${a.Title}
+                    </div>
+                `;
+            });
+        });
+    </script>
 
-        if (date) {
-          const d = parseDateSafe(date);
-          if (d) {
-            d.setDate(d.getDate() + 1);
-            if (d < today) return;
-          }
-        }
-
-        const card = document.createElement('div');
-        card.className = 'game-card';
-
-        // open link when clicked (new tab)
-        card.addEventListener('click', () => window.open(link, '_blank', 'noopener'));
-
-        card.innerHTML = `
-          <div class="thumb-wrap">
-            <img class="thumb" src="${thumb}" alt="${title}" loading="lazy">
-            ${live === 'true' ? '<div class="live-badge">LIVE</div>' : ''}
-          </div>
-          <div class="info">
-            <div class="game-title">${title}</div>
-            <div class="meta">
-              <span class="game-time">${time}</span>
-              <span class="game-date">${date}</span>
-            </div>
-          </div>
-        `;
-
-        grid.appendChild(card);
-      });
-    } catch (e) {
-      console.error("Games parse error:", e);
-    }
-  }).catch(e => console.error("Games fetch error:", e));
-  </script>
 </body>
 </html>
 
