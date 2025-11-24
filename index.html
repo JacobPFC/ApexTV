@@ -1,43 +1,45 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Apex TV – APEX Live Games</title>
-  <link rel="icon" href="images/Apex.ico" type="image/x-icon">
-  <link rel="stylesheet" href="style.css">
-  <link href="https://fonts.googleapis.com/css2?family=Rubik:wght@700&display=swap" rel="stylesheet">
-  <script src="https://cdn.jsdelivr.net/npm/papaparse@5.4.1/papaparse.min.js"></script>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Apex TV</title>
+<link rel="icon" href="images/Apex.ico" type="image/x-icon">
+<link rel="stylesheet" href="style.css">
+<link href="https://fonts.googleapis.com/css2?family=Rubik:wght@700&display=swap" rel="stylesheet">
+<script src="https://cdn.jsdelivr.net/npm/papaparse@5.4.1/papaparse.min.js"></script>
 </head>
 <body>
-  <!-- Top Buttons -->
-  <div class="top-buttons">
-    <a href="https://discord.gg/5a9pxtmVCC" target="_blank">
-      <img src="images/discord-white-icon.webp" class="discord-btn">
-    </a>
-    <a href="https://www.roblox.com/games/133603832850212/VRFS-Champions" target="_blank">
-      <img src="images/Banner2.png" class="vrfs-btn">
-    </a>
+
+<!-- Top Buttons -->
+<div class="top-buttons">
+  <a href="https://discord.gg/5a9pxtmVCC" target="_blank">
+    <img src="images/discord-white-icon.webp" class="discord-btn">
+  </a>
+  <a href="https://www.roblox.com/games/133603832850212/VRFS-Champions" target="_blank">
+    <img src="images/Banner2.png" class="vrfs-btn">
+  </a>
+</div>
+
+<h1 class="title">ApexTV</h1>
+
+<!-- Announcements -->
+<div id="announcements"></div>
+
+<!-- Game Tabs -->
+<div class="grid" id="gameGrid"></div>
+
+<!-- Popup -->
+<div id="gamePopup" class="popup">
+  <div class="popup-content">
+    <span id="closePopup" class="close">&times;</span>
+    <h2 id="popupTitle"></h2>
+    <p id="popupScore">Score not available</p>
+    <a id="popupLink" class="watch-btn" href="#" target="_blank">Watch</a>
   </div>
+</div>
 
-  <h1 class="title">ApexTV</h1>
-
-  <!-- Announcements -->
-  <div id="announcements"></div>
-
-  <!-- Game Tabs -->
-  <div class="grid" id="gameGrid"></div>
-
-  <!-- Popup -->
-  <div id="gamePopup" class="popup">
-    <div class="popup-content">
-      <span id="closePopup" class="close">&times;</span>
-      <h2 id="popupTitle"></h2>
-      <p id="popupScore">Score not available</p>
-      <a id="popupLink" class="watch-btn" href="#" target="_blank">Watch</a>
-    </div>
-  </div>
-
-  <script src="script.js"></script>
+<script src="script.js"></script>
 </body>
 </html>
+
