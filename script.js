@@ -1,81 +1,66 @@
+// CSV links
 const gamesCSV = "https://docs.google.com/spreadsheets/d/e/2PACX-1vRkv0zHUdhN-y48FkCmTeKwq6j-ZzOnvu0QPxZP4qeapyw0OfTY4jHZFpsLHD3zDWzDAcCkZKe8AY2K/pub?output=csv";
-const announceCSV = "https://docs.google.com/spreadsheets/d/e/2PACX-1vTVEKnXC_xcQSK3-w-1khtOJQ4j0rbEsjdKtbqdjcJA5bs5_WTjTSTpQxkiCVg06a-c-1E0oTduvb16/pub?output=csv";
+const announcementsCSV = "https://docs.google.com/spreadsheets/d/e/2PACX-1vTVEKnXC_xcQSK3-w-1khtOJQ4j0rbEsjdKtbqdjcJA5bs5_WTjTSTpQxkiCVg06a-c-1E0oTduvb16/pub?output=csv";
 
-let allGames = [];
-let currentLeague = null;
-
-// Load ANNOUNCEMENTS
-fetch(announceCSV)
-    .then(res => res.text())
-    .then(text => {
-        const rows = text.trim().split("\n").map(r => r.split(","));
-        const announcement = rows[1] ? rows[1][0] : "";
-        document.getElementById("announcements").textContent = announcement || "No announcements available.";
+// Convert CSV to objects
+function parseCSV(text) {
+    const lines = text.trim().split("\n");
+    const headers = lines[0].split(",");
+    return lines.slice(1).map(row => {
+        const values = row.split(",");
+        return Object.fromEntries(headers.map((h, i) => [h.trim(), values[i]?.trim()]));
     });
+}
 
-// Load GAMES
+// Load games
 fetch(gamesCSV)
     .then(res => res.text())
-    .then(text => {
-        const rows = text.trim().split("\n").map(r => r.split(","));
+    .then(data => {
+        const games = parseCSV(data);
+        const list = document.getElementById("gameList");
+        list.innerHTML = "";
 
-        const headers = rows[0];
-        const games = rows.slice(1).map(row => {
-            let obj = {};
-            headers.forEach((h,i) => obj[h] = row[i]);
-            return obj;
+        if (games.length === 0) {
+            list.innerHTML = "<p>No games available.</p>";
+            return;
+        }
+
+        games.forEach(game => {
+            const tab = document.createElement("div");
+            tab.className = "game-tab";
+            tab.onclick = () => openGamePopup(game);
+
+            tab.innerHTML = `
+                <img src="${game.Thumbnail}" class="thumbnail">
+                <div class="game-info">
+                    <div class="game-title">${game.Title}</div>
+                    <div class="game-time">${game.Time || ""}</div>
+                </div>
+            `;
+
+            list.appendChild(tab);
         });
-
-        allGames = games;
-        makeTabs();
-        showLeague(games[0].League);
     });
 
-function makeTabs() {
-    const leagues = [...new Set(allGames.map(g => g.League))];
-    const tabsDiv = document.getElementById("tabs");
-    tabsDiv.innerHTML = "";
+// Load announcements
+fetch(announcementsCSV)
+    .then(res => res.text())
+    .then(data => {
+        const ann = parseCSV(data);
+        const list = document.getElementById("announcementList");
+        list.innerHTML = "";
 
-    leagues.forEach(l => {
-        const tab = document.createElement("div");
-        tab.className = "tab";
-        tab.textContent = l;
-        tab.onclick = () => showLeague(l);
-        tabsDiv.appendChild(tab);
+        ann.forEach(a => {
+            const div = document.createElement("div");
+            div.textContent = a.Text;
+            list.appendChild(div);
+        });
     });
-}
 
-function showLeague(league) {
-    currentLeague = league;
-    const gamesDiv = document.getElementById("games");
-    gamesDiv.innerHTML = "";
-
-    const filtered = allGames.filter(g => g.League === league);
-
-    if (filtered.length === 0) {
-        gamesDiv.textContent = "No games available.";
-        return;
-    }
-
-    filtered.forEach(game => {
-        let div = document.createElement("div");
-        div.className = "gameDiv";
-
-        div.innerHTML = `
-            <img src="${game.Image}">
-            <h3>${game.Home} vs ${game.Away}</h3>
-            <p>${game.Date}</p>
-        `;
-
-        div.onclick = () => openGamePopup(game);
-        gamesDiv.appendChild(div);
-    });
-}
-
-// POPUP
+// Popup functions
 function openGamePopup(game) {
-    document.getElementById("popupTitle").textContent = `${game.Home} vs ${game.Away}`;
-    document.getElementById("popupScore").textContent = `Score: ${game.Score || "Not available"}`;
+    document.getElementById("popupTitle").textContent = game.Title;
+    document.getElementById("popupScore").textContent = game.Score || "Score unavailable";
     document.getElementById("popupLink").href = game.Link;
 
     document.getElementById("gamePopup").style.display = "flex";
