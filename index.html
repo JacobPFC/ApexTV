@@ -1,56 +1,39 @@
 <!DOCTYPE html>
-<html lang="en">
+<html>
 <head>
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Apex TV</title>
-
-    <!-- Favicon -->
-    <link rel="icon" type="image/x-icon" href="images/Apex.ico">
-
-    <!-- CSS -->
+    <meta charset="UTF-8">
+    <title>ApexTV</title>
     <link rel="stylesheet" href="style.css">
-
-    <!-- Rubik Font -->
-    <link href="https://fonts.googleapis.com/css2?family=Rubik:wght@400;700&display=swap" rel="stylesheet">
+    <link rel="icon" href="images/favicon.png">
 </head>
+
 <body>
 
-    <!-- Top Buttons -->
-    <div class="top-buttons">
-        <a href="https://discord.gg/5a9pxtmVCC" target="_blank">
-            <img src="images/discord-white-icon.webp" class="discord-btn">
-        </a>
-
+    <!-- Header -->
+    <header>
+        <h1>ApexTV</h1>
         <a href="https://www.roblox.com/games/133603832850212/VRFS-Champions" target="_blank">
-            <img src="images/Banner2.png" class="vrfs-btn">
+            <img src="images/Banner2.png" class="ad-banner">
         </a>
-    </div>
+    </header>
 
-    <!-- Announcements -->
-    <div class="announcements">
-        <h2>Announcements</h2>
-        <div id="announcementList">Loading...</div>
-    </div>
-
-    <!-- Games -->
-    <div class="games">
-        <h2>Games</h2>
-        <div id="gameList">Loading...</div>
+    <!-- Tabs -->
+    <div class="tabs">
+        <button class="tab" data-league="VFA">VFA</button>
+        <button class="tab" data-league="VSL">VSL</button>
+        <button class="tab" data-league="VRL">VRL</button>
     </div>
 
     <!-- Popup -->
-    <div id="gamePopup" class="popup">
+    <div id="popup" class="popup">
         <div class="popup-content">
-            <span class="close-btn" onclick="closePopup()">&times;</span>
+            <span id="closePopup" class="close">&times;</span>
             <h2 id="popupTitle"></h2>
             <p id="popupScore"></p>
-            <a id="popupLink" class="watch-btn" target="_blank">Watch</a>
+            <a id="popupLink" class="watch-btn" href="#" target="_blank">Watch</a>
         </div>
     </div>
 
-    <!-- Main JS -->
     <script src="script.js"></script>
 </body>
 </html>
-
