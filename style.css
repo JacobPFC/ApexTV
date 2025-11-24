@@ -178,6 +178,49 @@ body::before {
 #vrfs-btn img:hover {
   transform: scale(1.05);
 }
+.details-box {
+  max-width: 900px;
+  margin: 100px auto;
+  background: rgba(0,0,0,0.7);
+  padding: 30px;
+  border-radius: 20px;
+  text-align: center;
+  color: white;
+  font-family: 'Rubik', sans-serif;
+}
+
+.details-thumb {
+  width: 80%;
+  border-radius: 10px;
+  margin: 20px 0;
+}
+
+.details-title {
+  font-size: 40px;
+  font-weight: 700;
+  margin-bottom: 10px;
+}
+
+.details-info {
+  font-size: 20px;
+  margin-bottom: 20px;
+  line-height: 1.7;
+}
+
+.watch-btn {
+  display: inline-block;
+  background: #5865F2;
+  padding: 12px 25px;
+  border-radius: 10px;
+  color: white;
+  text-decoration: none;
+  font-size: 22px;
+  font-weight: 700;
+}
+
+.watch-btn:hover {
+  opacity: 0.8;
+}
 
 
 

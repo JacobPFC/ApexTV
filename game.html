@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Apex TV – Game Details</title>
+
+  <link rel="icon" href="Apex.ico" type="image/x-icon">
+  <link rel="stylesheet" href="style.css">
+  <link href="https://fonts.googleapis.com/css2?family=Rubik:wght@700&display=swap" rel="stylesheet">
+
+  <script src="https://cdn.jsdelivr.net/npm/papaparse@5.4.1/papaparse.min.js"></script>
+</head>
+<body>
+
+  <video autoplay muted loop id="bg-video">
+    <source src="https://i.imgur.com/4uDFOaf.mp4" type="video/mp4">
+  </video>
+
+  <div id="details" class="details-box">Loading...</div>
+
+  <script>
+    const urlParams = new URLSearchParams(window.location.search);
+    const gameID = urlParams.get("id");
+
+    const gamesCSV = "https://docs.google.com/spreadsheets/d/e/2PACX-1vRkv0zHUdhN-y48FkCmTeKwq6j-ZzOnvu0QPxZP4qeapyw0OfTY4jHZFpsLHD3zDWzDAcCkZKe8AY2K/pub?output=csv";
+
+    Papa.parse(gamesCSV, {
+      download: true,
+      header: true,
+      complete: function(results) {
+        const list = results.data;
+        const box = document.getElementById("details");
+
+        const game = list.find(g => g.ID === gameID);
+
+        if (!game) {
+          box.innerHTML = "<h2>Game not found.</h2>";
+          return;
+        }
+
+        box.innerHTML = `
+          <div class="details-title">${game.Title}</div>
+          <img src="${game.Thumbnail}" class="details-thumb">
+
+          <div class="details-info">
+            <div><strong>Date:</strong> ${game.Date || "TBA"}</div>
+            <div><strong>Time:</strong> ${game.Time || "TBA"}</div>
+            <div><strong>Score:</strong> ${game.Score || "Not available"}</div>
+            <div><strong>Status:</strong> ${game.Live === "true" ? "LIVE" : "Not Live"}</div>
+          </div>
+
+          <a class="watch-btn" href="${game.Link}" target="_blank">Watch Live</a>
+        `;
+      }
+    });
+  </script>
+
+</body>
+</html>
