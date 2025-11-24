@@ -4,36 +4,23 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Apex TV – APEX Live Games</title>
-
-  <!-- Favicon -->
-  <link rel="icon" href="Apex.ico" type="image/x-icon">
-
-  <!-- CSS -->
+  <link rel="icon" href="images/Apex.ico" type="image/x-icon">
   <link rel="stylesheet" href="style.css">
   <link href="https://fonts.googleapis.com/css2?family=Rubik:wght@700&display=swap" rel="stylesheet">
-
-  <!-- PapaParse for CSV -->
   <script src="https://cdn.jsdelivr.net/npm/papaparse@5.4.1/papaparse.min.js"></script>
 </head>
 <body>
+  <!-- Top Buttons -->
+  <div class="top-buttons">
+    <a href="https://discord.gg/5a9pxtmVCC" target="_blank">
+      <img src="images/discord-white-icon.webp" class="discord-btn">
+    </a>
+    <a href="https://www.roblox.com/games/133603832850212/VRFS-Champions" target="_blank">
+      <img src="images/Banner2.png" class="vrfs-btn">
+    </a>
+  </div>
 
-  <!-- Discord Button -->
-  <a href="https://discord.gg/5a9pxtmVCC" target="_blank" id="discord-btn">
-    <img src="https://raw.githubusercontent.com/JacobPFC/ApexTV/e7d7c55a99633e65c1d80498d3423baac23b9838/images/discord-white-icon.webp" alt="Discord" />
-  </a>
-
-  <!-- VRFS Champions Image Button -->
-  <a href="https://www.roblox.com/games/133603832850212/VRFS-Champions" target="_blank" id="vrfs-btn">
-    <img src="images/Banner2.png" alt="VRFS Champions" />
-  </a>
-
-  <!-- Video Background -->
-  <video autoplay muted loop id="bg-video">
-    <source src="https://i.imgur.com/4uDFOaf.mp4" type="video/mp4">
-    Your browser does not support the video tag.
-  </video>
-
-  <header>Apex TV – APEX Live Games</header>
+  <h1 class="title">ApexTV</h1>
 
   <!-- Announcements -->
   <div id="announcements"></div>
@@ -41,66 +28,16 @@
   <!-- Game Tabs -->
   <div class="grid" id="gameGrid"></div>
 
-  <script>
-    const announcementsCSV = "https://docs.google.com/spreadsheets/d/e/2PACX-1vTVEKnXC_xcQSK3-w-1khtOJQ4j0rbEsjdKtbqdjcJA5bs5_WTjTSTpQxkiCVg06a-c-1E0oTduvb16/pub?output=csv";
-    const gamesCSV = "https://docs.google.com/spreadsheets/d/e/2PACX-1vRkv0zHUdhN-y48FkCmTeKwq6j-ZzOnvu0QPxZP4qeapyw0OfTY4jHZFpsLHD3zDWzDAcCkZKe8AY2K/pub?output=csv";
+  <!-- Popup -->
+  <div id="gamePopup" class="popup">
+    <div class="popup-content">
+      <span id="closePopup" class="close">&times;</span>
+      <h2 id="popupTitle"></h2>
+      <p id="popupScore">Score not available</p>
+      <a id="popupLink" class="watch-btn" href="#" target="_blank">Watch</a>
+    </div>
+  </div>
 
-    // Load Announcements
-    Papa.parse(announcementsCSV, {
-      download: true,
-      header: true,
-      complete: function(results) {
-        const container = document.getElementById('announcements');
-        const today = new Date();
-        results.data.forEach(item => {
-          if(item.Message) {
-            const msgDate = item.Date ? new Date(item.Date) : null;
-            if(msgDate){
-              msgDate.setDate(msgDate.getDate() + 1);
-              if(msgDate < today) return;
-            }
-            const div = document.createElement('div');
-            div.className = 'announcement';
-            div.textContent = item.Message;
-            container.appendChild(div);
-          }
-        });
-      }
-    });
-
-    // Load Game Tabs
-    Papa.parse(gamesCSV, {
-      download: true,
-      header: true,
-      complete: function(results) {
-        const grid = document.getElementById('gameGrid');
-        const today = new Date();
-        grid.innerHTML = '';
-        results.data.forEach(game => {
-          if(game.Title && game.Thumbnail && game.Link){
-            if(game.Date){
-              const gameDate = new Date(game.Date);
-              gameDate.setDate(gameDate.getDate()+1);
-              if(gameDate < today) return;
-            }
-            const card = document.createElement('div');
-            card.className='game-card';
-            card.onclick = ()=>window.open(game.Link,'_blank');
-            card.innerHTML=`
-              <img src="${game.Thumbnail}" class="thumb" />
-              <div class="info">
-                <div class="game-title">${game.Title}</div>
-                <div class="game-time">${game.Time || ''}</div>
-                <div class="game-date">${game.Date || ''}</div>
-                ${game.Live==='true'?'<div class="live-tag">LIVE</div>':''}
-              </div>
-            `;
-            grid.appendChild(card);
-          }
-        });
-      }
-    });
-  </script>
+  <script src="script.js"></script>
 </body>
 </html>
-
