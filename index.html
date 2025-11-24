@@ -1,57 +1,48 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Apex TV – APEX Live Games</title>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ApexTV</title>
 
-  <link rel="icon" href="Apex.ico" type="image/x-icon">
-  <link rel="stylesheet" href="style.css">
-  <link href="https://fonts.googleapis.com/css2?family=Rubik:wght@700&display=swap" rel="stylesheet">
-  <script src="https://cdn.jsdelivr.net/npm/papaparse@5.4.1/papaparse.min.js"></script>
+    <!-- Favicon -->
+    <link rel="icon" type="image/x-icon" href="images/Apex.ico">
+
+    <!-- Rubik Bold -->
+    <link href="https://fonts.googleapis.com/css2?family=Rubik:wght@700&display=swap" rel="stylesheet">
+
+    <link rel="stylesheet" href="style.css">
 </head>
 <body>
 
-  <video autoplay muted loop id="bg-video">
-    <source src="https://i.imgur.com/4uDFOaf.mp4" type="video/mp4">
-  </video>
+    <header class="top-bar">
+        <a href="https://discord.gg/5a9pxtmVCC" target="_blank">
+            <img src="images/discord-white-icon.webp" class="discord-btn">
+        </a>
 
-  <header>Apex TV – APEX Live Games</header>
+        <a href="https://www.roblox.com/games/133603832850212/VRFS-Champions" target="_blank">
+            <img src="images/Banner2.png" class="ad-btn">
+        </a>
+    </header>
 
-  <div class="grid" id="gameGrid"></div>
+    <h1 class="title">ApexTV</h1>
 
-  <script>
-    const gamesCSV = "https://docs.google.com/spreadsheets/d/e/2PACX-1vRkv0zHUdhN-y48FkCmTeKwq6j-ZzOnvu0QPxZP4qeapyw0OfTY4jHZFpsLHD3zDWzDAcCkZKe8AY2K/pub?output=csv";
+    <div id="announcements"></div>
 
-    Papa.parse(gamesCSV, {
-      download: true,
-      header: true,
-      complete: function(results) {
-        const grid = document.getElementById('gameGrid');
-        results.data.forEach(game => {
-          if(game.ID && game.Title && game.Thumbnail){
-            const card = document.createElement('div');
-            card.className = 'game-card';
+    <div id="tabs"></div>
+    <div id="games"></div>
 
-            card.onclick = () => {
-              window.location.href = `game.html?id=${game.ID}`;
-            };
+    <!-- POPUP -->
+    <div id="gamePopup" class="popup">
+        <div class="popup-content">
+            <span class="close-btn" onclick="closePopup()">&times;</span>
+            <h2 id="popupTitle"></h2>
+            <p id="popupScore"></p>
+            <a id="popupLink" class="watch-btn" target="_blank">Watch</a>
+        </div>
+    </div>
 
-            card.innerHTML = `
-              <img src="${game.Thumbnail}" class="thumb">
-              <div class="info">
-                <div class="game-title">${game.Title}</div>
-                <div class="game-time">${game.Time || ''}</div>
-              </div>
-            `;
-
-            grid.appendChild(card);
-          }
-        });
-      }
-    });
-  </script>
-
+    <script src="script.js"></script>
 </body>
 </html>
 
